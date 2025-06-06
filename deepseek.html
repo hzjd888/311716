@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J.A.R.V.I.S 智能助手</title>
+    <style>
+        :root {
+            --primary-blue: #3b82f6;
+            --ai-yellow: #eab308;
+            --bg-color: #f8fafc;
+        }
+  
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+  
+        .jarvis-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+  
+        .chat-area {
+            height: 70vh;
+            padding: 30px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            position: relative;
+        }
+  
+        .message {
+            margin: 20px 0;
+            opacity: 0;
+            animation: messageAppear 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+        }
+  
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+  
+        .user-message {
+            margin-left: 25%;
+            background: white;
+            border: 2px solid var(--primary-blue);
+            border-radius: 20px 20px 5px 20px;
+            padding: 18px;
+        }
+  
+        .jarvis-message {
+            margin-right: 25%;
+            background: white;
+            border: 2px solid var(--ai-yellow);
+            border-radius: 20px 20px 20px 5px;
+            padding: 18px;
+            position: relative;
+        }
+  
+        .thinking-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
+            color: var(--ai-yellow);
+        }
+  
+        .thinking-text {
+            animation: pulse 1.5s infinite;
+        }
+  
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+  
+        .copy-toolbar {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+  
+        .message:hover .copy-toolbar {
+            opacity: 1;
+        }
+  
+        .copy-btn {
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+  
+        .copy-btn:hover {
+            background: #f1f5f9;
+        }
+  
+        .input-panel {
+            padding: 20px;
+            background: white;
+            border-top: 2px solid #e2e8f0;
+        }
+  
+        .input-group {
+            display: flex;
+            gap: 12px;
+        }
+  
+        input {
+            flex: 1;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+  
+        input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+  
+        button[type="submit"] {
+            padding: 16px 32px;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+  
+        button[type="submit"]:hover {
+            transform: translateY(-1px);
+        }
+  
+        .paragraph {
+            margin: 12px 0;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="jarvis-container">
+        <div class="chat-area" id="chatArea">
+            <div class="thinking-overlay" id="thinkingOverlay">
+                <div class="thinking-text">&#128993; 贾维斯正在思考中...</div>
+            </div>
+        </div>
+          
+        <div class="input-panel">
+            <form class="input-group">
+                <input
+                    type="text"
+                    id="userInput"
+                    placeholder="输入您的指令..."
+                    autocomplete="off"
+                     
+                >
+                <button type="submit" id="submitBtn">发送</button>
+            </form>
+        </div>
+    </div>
+  
+    <script>
+        const API_KEY = 'sk-69cfca70013c4d57860e42b868dfdd5a'; // 替换为实际API密钥
+        const API_ENDPOINT = 'https://api.deepseek.com/chat/completions';
+        let isProcessing = false;
+  
+        // 智能文本格式化
+        function formatResponse(text) {
+            return text.split(/\n{2,}/g).map(paragraph => {
+                return `<div class="paragraph">${paragraph.replace(/\n/g, '<br>')}</div>`;
+            }).join('');
+        }
+  
+        function createMessageElement(role, content) {
+            const messageId = `msg-${Date.now()}`;
+            const element = document.createElement('div');
+            element.className = `message ${role}-message`;
+            element.innerHTML = `
+                <div class="content" id="${messageId}">
+                    ${formatResponse(content)}
+                </div>
+                <div class="copy-toolbar">
+                    <button class="copy-btn">复制</button>
+                </div>
+            `;
+            return element;
+        }
+  
+        async function sendMessage() {
+            if (isProcessing) return;
+              
+            const inputField = document.getElementById('userInput');
+            const message = inputField.value.trim();
+            if (!message) return;
+  
+            try {
+                isProcessing = true;
+                inputField.disabled = true;
+                document.getElementById('thinkingOverlay').style.display = 'flex';
+  
+                // 添加用户消息
+                const userElement = createMessageElement('user', message);
+                document.getElementById('chatArea').appendChild(userElement);
+  
+                // API请求
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: [{ role: "user", content: message }],
+                        temperature: 0.7,
+                        presence_penalty: 0.6
+                    })
+                });
+  
+                if (!response.ok) throw new Error(`API错误: ${response.status}`);
+                  
+                const data = await response.json();
+                const reply = data.choices[0].message.content;
+  
+                // 添加AI响应
+                const aiElement = createMessageElement('jarvis', reply);
+                document.getElementById('chatArea').appendChild(aiElement);
+  
+            } catch (error) {
+                const errorElement = createMessageElement('jarvis', `&#9888;&#65039; 系统错误: ${error.message}`);
+                document.getElementById('chatArea').appendChild(errorElement);
+            } finally {
+                inputField.value = '';
+                inputField.disabled = false;
+                isProcessing = false;
+                document.getElementById('thinkingOverlay').style.display = 'none';
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+        }
+  
+        // 复制功能
+        function copyContent(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.innerText.replace(/\n{3,}/g, '\n\n');
+            navigator.clipboard.writeText(text);
+        }
+  
+        // 智能输入处理
+        function handleKeyDown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+  
+        // 初始化滚动定位
+        const chatArea = document.getElementById('chatArea');
+        chatArea.scrollTop = chatArea.scrollHeight;
+        // 绑定表单提交事件
+document.querySelector('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    sendMessage();
+});
+  
+// 绑定输入框键盘事件
+document.getElementById('userInput').addEventListener('keydown', handleKeyDown);
+  
+// 绑定复制按钮事件（补充功能）
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('copy-btn')) {
+        const messageId = e.target.closest('.message').querySelector('.content').id;
+        copyContent(messageId);
+    }
+});
+    </script>
+</body>
+</html>
