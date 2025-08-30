@@ -1,0 +1,807 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+   	<title> Python3 在线工具 | 菜鸟工具</title>
+     	<meta name='robots' content='max-image-preview:large' />
+	<style>img:is([sizes="auto" i], [sizes^="auto," i]) { contain-intrinsic-size: 3000px 1500px }</style>
+	<link rel='stylesheet' id='wpProQuiz_front_style-css' href='https://www.jyshare.com/wp-content/plugins/Wp-Pro-Quiz/css/wpProQuiz_front.min.css?ver=0.37' type='text/css' media='all' />
+<link rel="canonical" href="https://www.jyshare.com/compile/9/" />
+<meta name="keywords" content="Python3 在线工具">
+<meta name="description" content="该工具基于 Python3.x，可以实现在线编译 Python 代码……..">
+  <link rel="shortcut icon" href="https://static.jyshare.com/images/c-runoob-logo.ico">  
+			<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/codemirror/5.48.2/codemirror.min.js"></script>
+		<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/codemirror/5.48.2/addon/mode/simple.min.js"></script>
+		<link rel="stylesheet" href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/codemirror/5.48.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/codemirror/5.48.2/theme/material.min.css">
+    
+				
+		<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/codemirror/5.48.2/mode/python/python.js"></script>
+				
+    	
+    <!-- Bootstrap Core CSS -->
+	<link rel="stylesheet" href="https://www.jyshare.com/wp-content/themes/toolrunoob2/bootstrap.min.css">
+
+   <!-- Custom Fonts -->
+   <link href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]> 
+        <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/html5shiv/r29/html5.min.js"></script>
+        <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- PHP 代码 -->
+    <link rel="stylesheet" href="https://www.jyshare.com/wp-content/themes/toolrunoob2/style.css?version=1.403">
+
+    <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/clipboard.js/2.0.4/clipboard.min.js"></script>
+</head>
+
+<body>
+<style>
+
+.navbar-nav .nav-item {
+  white-space: nowrap; /* 防止li内部换行 */
+}
+
+.navbar-nav .nav-link {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* 防止链接文字换行 */
+}
+.navbar,.page-footer {
+
+background: rgb(75, 81, 104);
+border-width: 0px 0px 3px;
+border-bottom: 3px solid transparent;
+border-image: linear-gradient(90deg, rgb(141, 66, 108) 16%, rgb(81, 153, 211) 16%, rgb(81, 153, 211) 32%, rgb(34, 201, 148) 32%, rgb(34, 201, 148) 48%, rgb(240, 198, 18), 48%, rgb(240, 198, 18), 64%, rgb(255, 171, 77) 64%, rgb(255, 171, 77) 82%, rgb(210, 70, 93) 82%) 1 / 1 / 0 stretch;
+}
+.page-footer {
+  border-top: 3px solid transparent;
+  border-width: 3px 0px 0px;
+}
+</style>
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark "> 
+
+  <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+      <li class="nav-item nav-item-runoob">
+	  <a target="_blank" class="nav-link" href="https://www.jyshare.com/front-end/61">WEB在线工具</a>
+      </li>
+    
+      <li class="nav-item nav-item-runoob">
+	  <a target="_blank nav-item-runoob" class="nav-link" href="https://www.jyshare.com/more/shapefly-diagram/">在线画图</a> 
+      </li>
+      <li class="nav-item nav-item-runoob">
+	  <a target="_blank" class="nav-link" href="https://www.jyshare.com/ai/">AI集合</a>
+      </li>
+      <li class="nav-item nav-item-runoob">
+	  <a target="_blank" class="nav-link" href="https://www.jyshare.com/more/svgeditor/">SVG在线工具</a>
+      </li>
+     
+	  <li class="nav-item nav-item-runoob">
+	  <a target="_blank" class="nav-link" href="https://www.runoob.com/">菜鸟教程</a>
+      </li>
+            <li class="nav-item nav-item-runoob">
+	  <a target="_blank" class="nav-link" data-time=1115695 href="https://getrebuild.com/market/go/landing-24a">开源管理系统</a>
+      </li>
+                    <li class="nav-item nav-item-runoob">
+	  <a target="_blank" class="nav-link" data-time=1040095 href="https://codegeex.cn/zh-CN?channel_utm_campaign=media037&utm_campaign=media037
+">CodeGeeX编程助手</a>
+      </li>
+    </ul>
+    <style>
+   
+</style>
+    <form class="form-inline my-2 my-lg-0" action="/index.php" method="get">
+	      <div class="input-group has-search">
+     
+      <input class="form-control mr-sm-2" name="s" value="" type="text" placeholder="搜索..." aria-label="Search">
+     
+    </div>
+<!--
+      <button class="btn btn-warning my-2 my-sm-0" type="submit" >搜索</button>  -->
+    </form>
+      </div>
+</nav>
+<script>
+var is_home = false;
+</script>
+<style>
+.runoob-page-content {
+    margin: 0 20px;
+}
+</style>
+
+
+<div class="runoob-page-content">
+
+    
+
+<style>
+.CodeMirror {min-height: 500px}
+
+/* 自定义样式 */
+.split {
+    display: flex;
+    flex-direction: row;
+}
+
+.gutter {
+    background-color: #eee;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+    cursor: col-resize;
+}
+</style>
+<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/downloadjs/1.4.8/download.min.js"></script>
+<div class="row">
+
+    <div class="col-md-12">
+    <div >
+    <div class="bg-body rounded shadow-sm mb-4">
+        <div class="card">
+                    <div id="compiler" class="card-header">
+<form>
+  <div class="form-row align-items-center">
+    <div class="col-auto">
+    <button type="button" class="btn btn-primary mr-sm-1" id="submitBTN" disabled="disabled"><i class="fa fa-paper-plane"></i> 点击运行</button>
+    </div>
+    
+     <div class="col-auto"><input type="text" class="form-control mr-sm-1" name="stdin" id="stdin" placeholder="标准输入(stdin)"></div> <div class="col-auto"><i class="fa fa-question-circle" aria-hidden="true"></i> <a href="https://www.runoob.com/python3/python3-func-input.html#input-mutli" target="_blank">多个输入值？</a> </div>  
+    <div class="col-auto">
+    <select class="form-control mr-sm-1" id="sel1">
+        <option data-img="https://www.jyshare.com/wp-content/uploads/2021/08/Groovy.png" data-url="https://www.jyshare.com/compile/6208/">Groovy 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2021/08/general-assembly-logo.png" data-url="https://www.jyshare.com/compile/6206/">Assembly 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2020/05/iconfinder_285_R_Project_4518765.png" data-url="https://www.jyshare.com/compile/5649/">R 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2020/05/iconfinder_Vb_program_programming_file_extension_3044873.png" data-url="https://www.jyshare.com/compile/5648/">VB.NET 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2019/05/typescript.png" data-url="https://www.jyshare.com/compile/5577/">TypeScript 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2017/06/kotlin.png" data-url="https://www.jyshare.com/compile/2960/">Kotlin 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/pascal.png" data-url="https://www.jyshare.com/compile/73/">Pascal 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/lua.png" data-url="https://www.jyshare.com/compile/66/">Lua 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/node.png" data-url="https://www.jyshare.com/compile/22/">Node.js 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/go.png" data-url="https://www.jyshare.com/compile/21/">Go 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/swift.png" data-url="https://www.jyshare.com/compile/20/">Swift 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/iconfinder_rust_4691305.png" data-url="https://www.jyshare.com/compile/19/">RUST 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/bash.png" data-url="https://www.jyshare.com/compile/18/">Bash 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/perl.png" data-url="https://www.jyshare.com/compile/17/">Perl 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/iconfinder_115_Erlang_logo_logos_4373173.png" data-url="https://www.jyshare.com/compile/16/">Erlang 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/scala.png" data-url="https://www.jyshare.com/compile/15/">Scala 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/csharp.png" data-url="https://www.jyshare.com/compile/14/">C# 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/ruby.png" data-url="https://www.jyshare.com/compile/13/">Ruby 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/cpp.png" data-url="https://www.jyshare.com/compile/12/">C++ 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/c.png" data-url="https://www.jyshare.com/compile/11/">C 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/java.png" data-url="https://www.jyshare.com/compile/10/">Java 在线工具</option><option selected="selected" data-img="https://www.jyshare.com/wp-content/uploads/2016/01/python.png" data-url="https://www.jyshare.com/compile/9/">Python3 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/python.png" data-url="https://www.jyshare.com/compile/6/">Python2 在线工具</option><option data-img="https://www.jyshare.com/wp-content/uploads/2016/01/php.png" data-url="https://www.jyshare.com/compile/1/">PHP 在线工具</option>    </select>
+    </div>
+    <div class="col-auto">
+        <a target="_blank"  data-tt="435296"  href="https://click.aliyun.com/m/1000402708/" class="btn btn-outline-dark  "> <img src="https://www.jyshare.com/wp-content/uploads/2024/04/tongyi-logo.png" alt="图标" width="20" height="20" class="me-2">AI 编程工具</a>
+       <button type="button" class="btn btn-outline-warning copycode mr-sm-1" id="copycode"><i class="fa fa-copy" aria-hidden="true"></i> 复制</button>
+    <button type="button" class="btn btn-outline-danger mr-sm-1" id="clearCode" ><i class="fa fa-eraser" aria-hidden="true"></i> 清空</button>
+    <button type="button" class="btn btn-outline-dark mr-sm-1" id="downloadCode" ><i class="fas fa-cloud-download-alt"></i> 下载</button>
+    <input type="file" class="btn " onchange="changeToFileContent(this)">
+    </div>
+<!--
+    <div class="col-auto float-right">
+    <a  class="btn btn-outline-info mr-sm-1   float-right" href="mailto:admin@runoob.com" target="_blank"><i class="fa fa-envelope" aria-hidden="true"></i> 邮件反馈</a>
+    </div>
+-->
+  </div>
+</form>
+            </div>
+            <div class="card-body" style="background-color: #eee;">
+                <div class="row split " >
+                <input type="hidden" id="token" name="token" value="dadefd4c8adfb0e7d2221d31e1639f0c">
+                  <div  id="leftPane">
+                    <textarea class="form-control"  id="code" name="code" rows="18">#!/usr/bin/python
+# Write Python 3 code in this online editor and run it.
+print("Hello, World!");</textarea>
+                  </div>
+                  <div id="rightPane">
+                    <textarea placeholder="运行结果……" class="form-control" id="compiler-textarea-result" rows="23" >Hello, World!</textarea>
+                  </div>
+                </div>
+            </div>
+			<div class="card-footer text-muted" style="display:none;">
+			<button type="button" class="btn btn-dark mb-2" id="aiAnaCode"><i class="fas fa-robot"></i> AI 解析代码</button>
+			<blockquote class="blockquote mb-2" id="responseContainer"></blockquote>
+			</div>
+
+</div></div>
+
+
+        </div>
+    </div>
+
+</div>
+<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/marked/4.0.2/marked.min.js"></script>
+<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/split.js/1.6.5/split.min.js"></script>
+<link rel="stylesheet" href="https://static.jyshare.com/assets/select2-bootstrap4-theme/dist/css/select2.min.css">
+<link rel="stylesheet" href="https://static.jyshare.com/assets/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
+<script src="https://static.jyshare.com/assets/select2-bootstrap4-theme/dist/js/select2.full.min.js"></script>
+<script src="https://static.jyshare.com/assets/select2-bootstrap4-theme/dist/js/i18n/zh-CN.js"></script>
+<link rel="stylesheet" href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/codemirror/5.48.2/theme/idea.min.css"> 
+<script>
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+    lineNumbers: true,
+    matchBrackets: true,
+    mode: "text/x-python",
+    indentUnit: 4,
+    indentWithTabs: true,
+});
+editor.setOption("theme", "idea");
+btn = $("#submitBTN");
+editor.on("change", function(editor, change) {
+    btn.prop('disabled', false);
+});
+
+btn.click(function() {
+    btn.prop('disabled', true);
+    let loadingdata = '程序正在运行中……';
+    $("#compiler-textarea-result").val(loadingdata);
+  
+    let code = editor.getValue();
+    let stdin = '';
+    if ($('#stdin').length > 0) { 
+        stdin = $("#stdin").val();
+    }
+    let token =$("#token").val();
+    let runcode = 15;
+    $.post("https://www.runoob.com/try/compile2.php", {
+        code: code,
+        token: token,
+        stdin: stdin,
+        language: runcode,
+        fileext: "py3"
+    }, function(data) {
+        $("#compiler-textarea-result").val(data.output + data.errors);
+    });
+
+    setTimeout(function() { 
+        btn.prop('disabled', false);
+    }, 10 * 1000);
+});
+
+$("#clearCode").click(function() {
+    let r = confirm("确认清空？");
+    if (r === true) {
+        editor.setValue("");
+        editor.clearHistory();
+        $("#compiler-textarea-result").val("");
+        btn.prop('disabled', true);
+    }
+});
+
+$("#downloadCode").click(function() {
+    download(editor.getValue(), "runoob-test.py3", "text/plain");
+});
+
+$(function() {
+    // 处理选项选择事件
+    $('#sel1').on('select2:select', function(e) {
+        var data = e.params.data;
+        var url = $(data.element).data('url');
+        if (url) {
+            window.location.href = url;  // 跳转到指定的 URL
+        }
+    });
+    $("#sel1").select2({
+      language: "zh-CN",
+      theme: 'bootstrap4',
+      templateResult: formatOption,
+      templateSelection: formatOption,
+      placeholder: '请选择语言'
+    });
+});
+
+// 定义选项格式化函数
+function formatOption(option) {
+    if (!option.id) {
+        return option.text;
+    }
+
+    // 获取 data-src 属性中的图片 URL
+    var imgUrl = $(option.element).data('img');
+    if (!imgUrl) {
+        return option.text;
+    }
+    
+    // 创建带图片的选项内容
+    var $option = $(
+        '<span><img src="' + imgUrl + '" style="width: 20px; height: 20px; margin-right: 8px;" />' + option.text + '</span>'
+    );
+    // 为选项添加点击事件
+    $option.on('click', function() {
+        window.location.href = url;
+    });
+
+    return $option;
+}
+
+$('#aiAnaCode').on('click', function() {
+    // Get the input text
+    let inputText = editor.getValue();
+
+    if (inputText === "") {
+        alert('请输入查询内容');
+        return;
+    }
+
+    inputText = encodeURIComponent(inputText);
+    // Request data
+    let requestData = {
+        'RequestId': generateUUID(),
+        'requestToken': 'dadefd4c8adfb0e7d2221d31e1639f0c',
+        'userRegex': inputText
+    };
+
+    let _butttonText = $('#aiAnaCode').html();
+    $("#aiAnaCode").html("解析中...").prop("disabled", true);
+    let loadingText = 'AI 正在解析代码。。。';
+    $('#responseContainer').html(loadingText);
+
+    const url = "/more/ai/stream_search.php?ptype=anaCode&userInput=" + inputText + '&requestToken=dadefd4c8adfb0e7d2221d31e1639f0c';
+    const eventSource = new EventSource(url);
+
+    eventSource.addEventListener("open", (event) => {
+        // console.log("连接已建立", JSON.stringify(event));
+    });
+
+    eventSource.addEventListener("message", (event) => {
+        try {
+            let result = JSON.parse(event.data);
+            
+            if (result.output) {
+                $(".loading-container").hide();
+                // var htmlText = marked.parse(result.output.text);
+                let htmlText = marked.parse(result.output.text); // 取第一个选项
+                htmlText = htmlText.replace(/<pre>/g, '<pre class="prettyprint prettyprinted">');
+                $('#responseContainer').html(htmlText);
+                $("#aiAnaCode").html(_butttonText).prop("disabled", false);
+            }
+
+            if (result.output.finish_reason === 'stop') {
+                eventSource.close();
+                // console.log("数据完成");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+    eventSource.addEventListener('error', (error) => {
+        console.error('EventSource failed:', error);
+        eventSource.close();
+    });
+
+    eventSource.addEventListener("close", (event) => {
+        console.log("连接已关闭", JSON.stringify(event.data));
+        eventSource.close();
+        contentEnd = true;
+        console.log((new Date().getTime()), 'answer end');
+    });
+
+    // 设置连接超时时间为 60 秒
+    setTimeout(function() {
+        eventSource.close();
+        console.log('Connection timed out');
+    }, 60000);
+});
+
+new ClipboardJS('#copycode', {
+    text: function(trigger) {
+        return editor.getDoc().getValue();
+    }
+}).on('success', function(e) {
+    $("#copycode").html('已复制');
+    setTimeout(function() {
+        $("#copycode").html("<i class=\"fa fa-copy\" aria-hidden=\"true\"></i> 复制");
+    }, 2000);
+    e.clearSelection();
+}).on('error', function(e) {
+    alert('Error!');
+});
+
+function changeToFileContent(input) {
+    let file = input.files[0];
+  
+    if (file.size > 1024 * 1024 * 5) {
+        alert("上传内容不能大于 5 M！");
+        return false;
+    } else if (file) {
+        let reader = new FileReader();
+        reader.readAsText(file, "UTF-8");
+        reader.onload = function(event) {
+            if (editor) {
+                editor.setValue(event.target.result);
+            }
+        };
+    }
+}
+
+function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        let r = Math.random() * 16 | 0,
+            v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function getQueryVariable(variable) {
+    let query = window.location.search.substring(1);
+    let vars = query.split("&");
+    for (let i = 0; i < vars.length; i++) {
+        let pair = vars[i].split("=");
+        if (pair[0] == variable) {
+            return pair[1];
+        }
+    }
+    return false;
+}
+let splitInstance;
+
+// 初始化 Split.js 布局
+function initializeSplit(direction = 'horizontal') {
+    if (splitInstance) {
+        splitInstance.destroy();
+    }
+
+    splitInstance = Split(['#leftPane', '#rightPane'], {
+        sizes: [50, 50], // 初始大小
+        minSize: 100,    // 每个面板的最小宽度
+        gutterSize: 10,  // 分隔线的宽度
+        cursor: direction === 'horizontal' ? 'col-resize' : 'row-resize', // 鼠标样式
+        direction: direction
+    });
+}
+
+// 检查屏幕宽度并设置方向
+function checkScreenSize() {
+    if (window.innerWidth < 768) { // 小于768px则使用垂直布局
+        document.querySelector('.split').style.flexDirection = 'column';
+        initializeSplit('vertical');
+    } else { // 否则使用水平布局
+        document.querySelector('.split').style.flexDirection = 'row';
+        initializeSplit('horizontal');
+    }
+}
+
+// 监听窗口大小变化事件
+window.addEventListener('resize', checkScreenSize);
+
+// 初始加载时检查屏幕大小
+checkScreenSize();
+</script>
+</div>
+
+<!-- Footer -->
+<footer class="page-footer mt-4 pt-4"> 
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">
+	        <footer class="footer">
+            <p>Copyright &copy; <a href=index.html>大鱼AI共创营 © 2023</a> |<a href=plan.html>每日学编程英语</a> | 由人工智能提供技术支持</p>
+        </footer>
+  </div>
+  <!-- Copyright -->
+
+</footer>
+
+
+
+
+
+<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.6.0/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script>
+
+
+$(function() {
+  // 当点击搜索图标时
+  $(".search-icon").click(function() {
+    $(this).parent().siblings().toggle();
+  });
+
+  // 监听搜索框的输入事件
+  $('.search-input').on('input', function() {
+      const query = $(this).val().toLowerCase();
+      $(this).parent().parent().parent().siblings().find('a').each(function() {
+          const linkText = $(this).text().toLowerCase();
+          if (linkText.includes(query)) {
+              $(this).parent().show();
+          } else {
+            $(this).parent().hide();
+          }
+      });
+  });
+	//代码高亮
+
+  if ($('[data-toggle="tooltip"]').length > 0) {
+    $('[data-toggle="tooltip"]').tooltip();
+  }
+
+  if(is_home || $('#goto').length > 0) {
+    $(window).scroll(function () {
+      var _stop = $(window).scrollTop();
+      if(_stop>=100) {
+        $("#go-top").fadeIn();
+        
+      }else {
+        $("#go-top").fadeOut();
+      }
+    });
+    _current_hash = window.location.hash;
+   // console.log(_current_hash);
+    if(_current_hash) {
+     
+        var $targetEle = $(_current_hash);
+        var sTop =  $targetEle.offset().top;
+        $('html, body').stop().animate({
+            'scrollTop':sTop-100
+        }, 300, 'swing', function (e) {
+         // window.location.hash = targetEle;
+        }); 
+        console.log(sTop);
+        return false;
+     
+    }
+    $("#go-top").click(function(event){	
+     $('html,body').animate({scrollTop:0}, 100);
+     return false;
+    });
+    // 导航
+    var _html_nav='<a class="nav-link active" href="javascript:void();"><i class="fa fa-compass" aria-hidden="true"></i> 快速导航</a>';
+    var _html_right_nav = '<button class="dropdown-item" href="#"><i class="fa fa-th-list" aria-hidden="true"></i> 快速导航</button><div class="dropdown-divider"></div>';
+    var _html_left_nav = '<dt><span class="show-list"></span></dt>';
+    for (var i=0;i<data_hrefs.length;i++)
+    { 
+        id="runoob-goto-" + data_hrefs[i];
+        _html_nav += '<a class="nav-link" href="#'+id+'">'+$("#"+id).data("text")+'</a>';
+        _html_right_nav +='<button class="dropdown-item" onclick="location.href=\'#'+id+'\'" type="button"><i class="fa fa-caret-right" aria-hidden="true"></i> '+$("#"+id).data("text")+'</button>' ;
+        _html_left_nav +='<dd><a href="#'+id+'" class="auto-scroll" data-offset="98" data-speed="500">'+$("#"+id).data("text")+'</a></dd>';
+    }
+    $(".nav-underline").html(_html_nav);
+    $("#right_nav_list").html(_html_right_nav);
+    $("#goto").html(_html_left_nav);
+    if($(".nav-scroller").is(":visible")){
+      $('a[href^="#"]').on('click', function (e) {
+       
+          e.preventDefault();
+          $(this).addClass('nav-underline-active');
+          $(this).siblings().removeClass('nav-underline-active');
+          var targetEle = this.hash;
+          var $targetEle = $(targetEle);
+          var sTop =  $targetEle.offset().top;
+          $('html, body').stop().animate({
+              'scrollTop':sTop-100
+          }, 300, 'swing', function () {
+          //   window.location.hash = targetEle;
+          });
+      });
+    } else {
+      $('a[href^="#"]').on('click', function (e) {
+          e.preventDefault();
+          
+          var targetEle = this.hash;
+          var $targetEle = $(targetEle);
+          var sTop =  $targetEle.offset().top;
+          //console.log(sTop);
+          $('html, body').stop().animate({
+              'scrollTop':sTop-98   
+          }, 300, 'swing', function () {
+          //   window.location.hash = targetEle;
+          });
+      });
+    }
+  } else { 
+    $("#top").hide();
+  }
+  
+
+  // search
+  if($('#search-name').length){
+      var _href=  $("#search-name .nav-underline-active").attr("href");
+  }
+ 
+  $('#search-name li a').each(function(){
+    $(this).on("click", function(e){
+      e.preventDefault();
+      _href = $(this).attr('href');
+      $(this).removeClass("text-muted").addClass("nav-underline-active");
+      $(this).parent().siblings().find("a").addClass("text-muted").removeClass("nav-underline-active");
+    //  console.log(_href);
+    });
+    
+  })
+
+  $('#search-button').on("click", function(e){
+   // console.log(_href);
+    _hmt.push(['_trackEvent', 'Search', 'Click', '搜索工具']);
+    keyword = $(".search").find("input:text").val();
+    window.open(_href + keyword, '_blank');
+  });
+  $(".search").find("input:text").keypress(function (e) {
+    var key = e.which;
+    if(key == 13)  // the enter key code
+    {
+      window.open(_href + $(this).val(), '_blank'); 
+      return false;  
+    }
+  });  
+
+});
+
+ // 为 <pre> 标签添加复制按钮
+ function addCopyButton(pre) {
+    const button = document.createElement('button');
+    button.className = 'copy-button';
+    button.innerHTML = '<i class="fas fa-copy"></i>';
+
+    const container = document.createElement('div');
+    container.className = 'code-container-jyshare';
+    pre.parentNode.insertBefore(container, pre);
+    container.appendChild(pre);
+    container.appendChild(button);
+
+    // console.log('按钮已插入:', button); // 检查按钮是否插入成功
+
+    button.addEventListener('click', () => {
+      //   console.log('按钮被点击'); // 检查点击事件是否触发
+        if (!navigator.clipboard) {
+            alert('您的浏览器不支持复制功能，请手动复制代码。');
+            return;
+        }
+
+        const codeBlock = pre.querySelector('code') || pre;
+        navigator.clipboard.writeText(codeBlock.textContent)
+            .then(() => {
+                button.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-copy"></i>';
+                }, 3000);
+            })
+            .catch(err => {
+                console.error('复制失败:', err);
+                button.innerHTML = '<i class="fas fa-times"></i>';
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-copy"></i>'; 
+                }, 3000);
+            });
+    });
+}
+
+(function($){ 
+  var p=$('.runoob-item-index'); 
+  if(p.length<1) return;
+  var arr=[];
+  function part_offset_top() {
+    p.each(function () {
+      var of=$(this).offset();
+      arr.push(Math.floor(of.top));
+    });
+  }
+  function goto_current(index) {
+    var a=$('#goto dd');
+    var b=$('#goto dt');
+    if(a.length<1) return;
+    var h=a.outerHeight();
+    if (!a.eq(index).hasClass('current')) {
+      a.removeClass('current');
+      a.eq(index).addClass('current');
+     // console.log(index)
+      b.animate({
+        'top': h*index+(a.outerHeight()-b.outerHeight())/2+1
+      },50);
+    }
+  }
+  function window_scroll() {
+    var st=window.pageYOffset
+    			|| document.documentElement.scrollTop
+    			|| document.body.scrollTop
+    			|| 0;
+    var limit=Math.ceil(st+98);
+    var index=0;
+    for (var i = 0; i < arr.length; i++) {
+      if (limit>=arr[i]) {
+        index=i;
+      }else{
+        break;
+      }
+    }
+    if (index<0) index=0;
+    if (!p.eq(index).hasClass('current')) {
+      p.removeClass('current');
+      p.eq(index).addClass('current');
+      goto_current(index);
+    }
+  }
+  part_offset_top();
+  setTimeout(window_scroll,0);
+  $(window).on('scroll',window_scroll);
+})(jQuery);
+/* --侧边栏滚动时固定-- */
+(function($){
+  var s=$('.sidebar');
+  
+  if(s.length<1) return;
+  var c=s.children('.content-sidebar');
+  if(c.length<1) return;
+  var $parent=s.parent();
+  if($parent.length<1) return;
+  var start=0,stop=0,cHeight=0;
+  function init() {
+    var soffset=s.offset();
+    start=soffset.top;
+    stop=start+$parent.height();
+    cinit();
+  }
+  function cinit() {
+    cHeight=c.height();
+  }
+  function cClear(){
+    c.removeClass('fixed');
+    c.removeClass('absolute');
+  }
+  function check_scroll(){
+    var st=window.pageYOffset
+    			|| document.documentElement.scrollTop
+    			|| document.body.scrollTop
+    			|| 0;
+    if (st<=start) {
+      cClear();
+    }
+    if (st>=stop-cHeight) {
+      c.removeClass('fixed');
+      c.addClass('absolute');
+      return;
+    }
+    if (st<stop-cHeight && st>start) {
+      c.removeClass('absolute');
+      c.addClass('fixed');
+    }
+  }
+  
+  init();
+  check_scroll();
+  $(window).on('resize',init);
+  $(window).on('scroll',check_scroll);
+})(jQuery);
+
+(function () {
+  'use strict'
+
+  document.querySelector('#navbarSideCollapse').addEventListener('click', function () {
+    document.querySelector('.offcanvas-collapse').classList.toggle('open')
+  })
+})()
+</script>
+<div style="display:none;">
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6d663ac80d8b95a60e359ffed9f3d0d0";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2BKSTK8N4K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2BKSTK8N4K');
+</script>
+</div>
+
+
+<div class="modal fade" id="tg-1" tabindex="-1" role="dialog" aria-labelledby="tg-1" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-bold text-danger"><i class="fas fa-comments-dollar"></i> textxx</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span> 
+        </button>
+      </div>
+      <div class="modal-body">
+      <div class="text-center">
+      xxx
+      </div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+
+</html>

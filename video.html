@@ -1,0 +1,922 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI生成本地多媒体播放器</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --glass: rgba(255, 255, 255, 0.15);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+ 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+ 
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+ 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+ 
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.6s forwards 0.1s;
+        }
+ 
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+ 
+        .subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+ 
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s forwards;
+        }
+ 
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+ 
+        .card:nth-child(1) { animation-delay: 0.2s; }
+        .card:nth-child(2) { animation-delay: 0.3s; }
+        .card:nth-child(3) { animation-delay: 0.4s; }
+ 
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+ 
+        .section-title svg {
+            margin-right: 0.75rem;
+            width: 24px;
+            height: 24px;
+        }
+ 
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+ 
+        .input-field {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.7);
+        }
+ 
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+ 
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            white-space: nowrap;
+        }
+ 
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+ 
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+ 
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+ 
+        .btn-secondary:hover {
+            background: #0ea472;
+            transform: translateY(-2px);
+        }
+ 
+        .btn-icon {
+            margin-right: 0.5rem;
+        }
+ 
+        .file-input {
+            display: none;
+        }
+ 
+        .media-container {
+            width: 100%;
+            margin-top: 1.5rem;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background: #000;
+            position: relative;
+            display: none;
+        }
+ 
+        video, audio {
+            width: 100%;
+            outline: none;
+        }
+ 
+        .image-preview {
+            max-width: 100%;
+            max-height: 60vh;
+            display: block;
+            margin: 1.5rem auto 0;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            cursor: zoom-in;
+            transition: var(--transition);
+            display: none;
+        }
+ 
+        .image-preview:hover {
+            transform: scale(1.02);
+        }
+ 
+        .status {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            display: none;
+        }
+ 
+        .status-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--secondary);
+            display: block;
+        }
+ 
+        .status-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            display: block;
+        }
+ 
+        .formats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+ 
+        .format-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+ 
+        .format-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+ 
+        .format-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+ 
+        .format-title svg {
+            margin-right: 0.5rem;
+            color: var(--primary);
+        }
+ 
+        .format-list {
+            list-style: none;
+        }
+ 
+        .format-item {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+ 
+        .format-item svg {
+            margin-right: 0.5rem;
+        }
+ 
+        .supported {
+            color: var(--secondary);
+        }
+ 
+        .unsupported {
+            color: #ef4444;
+        }
+ 
+        /* Image viewer modal */
+        .image-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: zoom-out;
+        }
+ 
+        .viewer-image {
+            max-width: 90%;
+            max-height: 90%;
+            transition: transform 0.3s ease;
+        }
+ 
+        .viewer-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.75rem;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 0.75rem;
+            border-radius: 2rem;
+        }
+ 
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+ 
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+ 
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+ 
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+ 
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+ 
+        /* Responsive */
+        [url=home.php?mod=space&uid=945662]@media[/url] (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+ 
+            h1 {
+                font-size: 2rem;
+            }
+ 
+            .input-group {
+                flex-direction: column;
+            }
+ 
+            .formats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+ 
+        /* Icons */
+        .icon {
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.125em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>本地多媒体播放器</h1>
+            <p class="subtitle">多媒体播放解决方案，支持视频、音频和图片格式</p>
+        </header>
+ 
+        <main>
+            <div class="card">
+                <h2 class="section-title">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+                    </svg>
+                    媒体控制中心
+                </h2>
+                 
+                <div class="input-group">
+                    <input type="text" class="input-field" id="media-url" placeholder="输入媒体URL (支持MP4, WebM, MP3, JPG等)">
+                    <button class="btn btn-primary" id="play-btn">
+                        <svg class="icon btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        播放
+                    </button>
+                </div>
+                 
+                <div class="input-group">
+                    <button class="btn btn-secondary" id="file-btn">
+                        <svg class="icon btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                        选择文件
+                    </button>
+                    <input type="file" class="file-input" id="file-input" accept="video/*,audio/*,image/*">
+                </div>
+                 
+                <div class="status" id="status-message"></div>
+                 
+                <div class="media-container" id="video-player">
+                    <video controls crossorigin="anonymous"></video>
+                </div>
+                 
+                <div class="media-container" id="audio-player">
+                    <audio controls></audio>
+                </div>
+                 
+                <img class="image-preview" id="image-preview" alt="预览图片">
+            </div>
+             
+            <div class="card">
+                <h2 class="section-title">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+                        <path d="M7 12h2v5H7zm4-7h2v12h-2zm4 5h2v7h-2z"/>
+                    </svg>
+                    支持的格式
+                </h2>
+                 
+                <div class="formats-grid">
+                    <div class="format-card">
+                        <h3 class="format-title">
+                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M10 8v8l5-4-5-4zm9-5H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+                            </svg>
+                            视频格式
+                        </h3>
+                        <ul class="format-list">
+                            <li class="format-item">
+                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                                <span class="supported" id="mp4-support">MP4 (H.264)</span>
+                            </li>
+                            <li class="format-item">
+                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                                <span class="supported" id="webm-support">WebM</span>
+                            </li>
+                            <li class="format-item">
+                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                                <span class="supported" id="ogg-support">Ogg Theora</span>
+                            </li>
+                            <li class="format-item">
+                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                                <span class="supported" id="hls-support">M3U8/HLS</span>
+                            </li>
+                        </ul>
+                    </div>
+                     
+                    <div class="format-card">
+                        <h3 class="format-title">
+                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                            </svg>
+                            音频格式
+                        </h3>
+                        <ul class="format-list">
+                            <li class="format-item">
+                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                                <span class="supported" id="mp3-support">MP3</span>
+                            </li>
+                            <li class="format-item">
+                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                                <span class="supported" id="wav-support">WAV</span>
+                            </li>
+                            <li class="format-item">
+                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                                <span class="supported" id="ogg-audio-support">Ogg Vorbis</span>
+                            </li>
+                            <li class="format-item">
+                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                                <span class="supported" id="aac-support">AAC</span>
+                            </li>
+                        </ul>
+                    </div>
+                     
+                    <div class="format-card">
+                        <h3 class="format-title">
+                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4.86 8.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z"/>
+                            </svg>
+                            图片格式
+                        </h3>
+                        <ul class="format-list">
+                            <li class="format-item">
+                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                                <span class="supported">JPG/JPEG</span>
+                            </li>
+                            <li class="format-item">
+                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                                <span class="supported">PNG</span>
+                            </li>
+                            <li class="format-item">
+                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                                <span class="supported">GIF</span>
+                            </li>
+                            <li class="format-item">
+                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                                <span class="supported">WebP</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+ 
+        <!-- Image Viewer Modal -->
+        <div class="image-viewer" id="image-viewer">
+            <img class="viewer-image" id="viewer-image" alt="全屏图片">
+            <div class="viewer-controls">
+                <button class="control-btn" id="zoom-in">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                </button>
+                <button class="control-btn" id="zoom-out">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13H5v-2h14v2z"/>
+                    </svg>
+                </button>
+                <button class="control-btn" id="zoom-reset">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                    </svg>
+                </button>
+                <button class="control-btn" id="close-viewer">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+ 
+        <footer>
+            <p>网页由AI仅供参考</p>
+            <p>特此奉献给有需要的道友</p>
+            <p><a href="https://www.52pojie.cn" target="_blank">www.52pojie.cn</a></p>
+        </footer>
+    </div>
+ 
+    <script>
+        // 全局变量
+        let hls = null;
+        let currentMediaType = null;
+        let currentScale = 1;
+         
+        // DOM元素
+        const fileInputBtn = document.getElementById('file-btn');
+        const fileInput = document.getElementById('file-input');
+        const playBtn = document.getElementById('play-btn');
+        const mediaUrlInput = document.getElementById('media-url');
+        const videoPlayer = document.getElementById('video-player');
+        const videoElement = videoPlayer.querySelector('video');
+        const audioPlayer = document.getElementById('audio-player');
+        const audioElement = audioPlayer.querySelector('audio');
+        const imagePreview = document.getElementById('image-preview');
+        const imageViewer = document.getElementById('image-viewer');
+        const viewerImage = document.getElementById('viewer-image');
+        const zoomInBtn = document.getElementById('zoom-in');
+        const zoomOutBtn = document.getElementById('zoom-out');
+        const zoomResetBtn = document.getElementById('zoom-reset');
+        const closeViewerBtn = document.getElementById('close-viewer');
+        const statusMessage = document.getElementById('status-message');
+         
+        // 初始化播放器
+        function initPlayer() {
+            checkSupportedFormats();
+            setupEventListeners();
+        }
+         
+        // 检测浏览器支持的格式
+        function checkSupportedFormats() {
+            const video = document.createElement('video');
+            const audio = document.createElement('audio');
+             
+            // 检测视频格式支持
+            document.getElementById('mp4-support').className = video.canPlayType('video/mp4; codecs="avc1.42E01E"') ? 'supported' : 'unsupported';
+            document.getElementById('webm-support').className = video.canPlayType('video/webm; codecs="vp8, vorbis"') ? 'supported' : 'unsupported';
+            document.getElementById('ogg-support').className = video.canPlayType('video/ogg; codecs="theora, vorbis"') ? 'supported' : 'unsupported';
+             
+            // 检测音频格式支持
+            document.getElementById('mp3-support').className = audio.canPlayType('audio/mpeg') ? 'supported' : 'unsupported';
+            document.getElementById('wav-support').className = audio.canPlayType('audio/wav') ? 'supported' : 'unsupported';
+            document.getElementById('ogg-audio-support').className = audio.canPlayType('audio/ogg; codecs="vorbis"') ? 'supported' : 'unsupported';
+            document.getElementById('aac-support').className = audio.canPlayType('audio/aac') ? 'supported' : 'unsupported';
+             
+            // 检测HLS支持
+            const hlsSupport = document.getElementById('hls-support');
+            if (video.canPlayType('application/vnd.apple.mpegurl') || Hls.isSupported()) {
+                hlsSupport.className = 'supported';
+            } else {
+                hlsSupport.className = 'unsupported';
+            }
+        }
+         
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 文件选择按钮点击事件
+            fileInputBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+             
+            // 文件输入变化事件
+            fileInput.addEventListener('change', handleFileSelect);
+             
+            // 播放按钮点击事件
+            playBtn.addEventListener('click', playFromUrl);
+             
+            // URL输入框回车事件
+            mediaUrlInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    playFromUrl();
+                }
+            });
+             
+            // 图片点击事件 - 打开查看器
+            imagePreview.addEventListener('click', openImageViewer);
+             
+            // 查看器控制按钮
+            zoomInBtn.addEventListener('click', () => zoomImage(1.2));
+            zoomOutBtn.addEventListener('click', () => zoomImage(0.8));
+            zoomResetBtn.addEventListener('click', () => zoomImage(0));
+            closeViewerBtn.addEventListener('click', closeImageViewer);
+             
+            // 键盘快捷键
+            document.addEventListener('keydown', handleKeyDown);
+             
+            // 鼠标滚轮缩放
+            imageViewer.addEventListener('wheel', handleWheel, { passive: false });
+        }
+         
+        // 处理文件选择
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+             
+            const fileUrl = URL.createObjectURL(file);
+            loadMedia(fileUrl, file.type);
+        }
+         
+        // 从URL播放
+        function playFromUrl() {
+            const url = mediaUrlInput.value.trim();
+            if (!url) {
+                showStatus('请输入有效的媒体URL', 'error');
+                return;
+            }
+             
+            // 检查是否是HLS流
+            if (url.endsWith('.m3u8')) {
+                loadHlsStream(url);
+                return;
+            }
+             
+            // 尝试确定媒体类型
+            let mimeType = '';
+            if (url.match(/\.(mp4|m4v|mov)$/i)) {
+                mimeType = 'video/mp4';
+            } else if (url.match(/\.webm$/i)) {
+                mimeType = 'video/webm';
+            } else if (url.match(/\.og[gv]$/i)) {
+                mimeType = 'video/ogg';
+            } else if (url.match(/\.(mp3)$/i)) {
+                mimeType = 'audio/mpeg';
+            } else if (url.match(/\.wav$/i)) {
+                mimeType = 'audio/wav';
+            } else if (url.match(/\.(ogg|oga)$/i)) {
+                mimeType = 'audio/ogg';
+            } else if (url.match(/\.(aac)$/i)) {
+                mimeType = 'audio/aac';
+            } else if (url.match(/\.(jpe?g|png|gif|bmp|webp)$/i)) {
+                mimeType = 'image/' + url.split('.').pop().toLowerCase();
+                if (mimeType === 'image/jpg') mimeType = 'image/jpeg';
+            }
+             
+            loadMedia(url, mimeType);
+        }
+         
+        // 加载媒体
+        function loadMedia(url, mimeType) {
+            // 清理之前的媒体
+            resetPlayer();
+             
+            // 根据MIME类型确定媒体类型
+            let mediaType;
+            if (mimeType.startsWith('video/')) {
+                mediaType = 'video';
+            } else if (mimeType.startsWith('audio/')) {
+                mediaType = 'audio';
+            } else if (mimeType.startsWith('image/')) {
+                mediaType = 'image';
+            } else {
+                // 如果无法从MIME类型确定，尝试从URL扩展名猜测
+                if (url.match(/\.(mp4|webm|og[gv]|m4v|mov)$/i)) {
+                    mediaType = 'video';
+                } else if (url.match(/\.(mp3|wav|ogg|aac)$/i)) {
+                    mediaType = 'audio';
+                } else if (url.match(/\.(jpe?g|png|gif|bmp|webp)$/i)) {
+                    mediaType = 'image';
+                } else {
+                    showStatus('无法确定媒体类型，请尝试指定完整URL或选择文件', 'error');
+                    return;
+                }
+            }
+             
+            currentMediaType = mediaType;
+             
+            try {
+                switch (mediaType) {
+                    case 'video':
+                        videoPlayer.style.display = 'block';
+                        videoElement.src = url;
+                        videoElement.load();
+                        videoElement.play().catch(e => {
+                            showStatus('视频加载成功，但自动播放被阻止。请点击播放按钮。', 'success');
+                        });
+                        break;
+                    case 'audio':
+                        audioPlayer.style.display = 'block';
+                        audioElement.src = url;
+                        audioElement.load();
+                        audioElement.play().catch(e => {
+                            showStatus('音频加载成功，但自动播放被阻止。请点击播放按钮。', 'success');
+                        });
+                        break;
+                    case 'image':
+                        imagePreview.style.display = 'block';
+                        imagePreview.src = url;
+                        showStatus('图片已加载', 'success');
+                        break;
+                }
+            } catch (e) {
+                showStatus('加载媒体时出错: ' + e.message, 'error');
+                console.error(e);
+            }
+        }
+         
+        // 加载HLS流
+        function loadHlsStream(url) {
+            resetPlayer();
+            currentMediaType = 'video';
+             
+            if (Hls.isSupported()) {
+                // 如果支持HLS.js
+                if (hls) {
+                    hls.destroy();
+                }
+                 
+                hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(videoElement);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    videoPlayer.style.display = 'block';
+                    videoElement.play().catch(e => {
+                        showStatus('HLS流加载成功，但自动播放被阻止。请点击播放按钮。', 'success');
+                    });
+                });
+                 
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal) {
+                        switch (data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                showStatus('网络错误，尝试恢复...', 'error');
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                showStatus('媒体错误，尝试恢复...', 'error');
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                showStatus('无法加载HLS流', 'error');
+                                hls.destroy();
+                                break;
+                        }
+                    }
+                });
+            } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+                // Safari原生支持HLS
+                videoPlayer.style.display = 'block';
+                videoElement.src = url;
+                videoElement.addEventListener('error', () => {
+                    showStatus('无法加载HLS流', 'error');
+                });
+                videoElement.play().catch(e => {
+                    showStatus('HLS流加载成功，但自动播放被阻止。请点击播放按钮。', 'success');
+                });
+            } else {
+                showStatus('您的浏览器不支持HLS流播放', 'error');
+            }
+        }
+         
+        // 重置播放器
+        function resetPlayer() {
+            // 隐藏所有播放器
+            videoPlayer.style.display = 'none';
+            audioPlayer.style.display = 'none';
+            imagePreview.style.display = 'none';
+             
+            // 重置源
+            videoElement.src = '';
+            audioElement.src = '';
+            imagePreview.src = '';
+             
+            // 停止HLS实例
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+             
+            // 清除状态消息
+            statusMessage.style.display = 'none';
+            statusMessage.textContent = '';
+            statusMessage.className = 'status';
+        }
+         
+        // 显示状态消息
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'status status-' + type;
+            statusMessage.style.display = 'block';
+        }
+         
+        // 图片查看器功能
+        function openImageViewer() {
+            viewerImage.src = imagePreview.src;
+            currentScale = 1;
+            viewerImage.style.transform = 'scale(1)';
+            imageViewer.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+         
+        function closeImageViewer() {
+            imageViewer.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+         
+        function zoomImage(factor) {
+            if (factor === 0) {
+                // 重置缩放
+                currentScale = 1;
+            } else {
+                // 应用缩放因子
+                currentScale *= factor;
+                 
+                // 限制缩放范围
+                if (currentScale < 0.1) currentScale = 0.1;
+                if (currentScale > 10) currentScale = 10;
+            }
+             
+            viewerImage.style.transform = `scale(${currentScale})`;
+        }
+         
+        // 键盘快捷键处理
+        function handleKeyDown(e) {
+            if (imageViewer.style.display === 'flex') {
+                switch (e.key) {
+                    case 'Escape':
+                        closeImageViewer();
+                        break;
+                    case '+':
+                    case '=':
+                        zoomImage(1.2);
+                        break;
+                    case '-':
+                    case '_':
+                        zoomImage(0.8);
+                        break;
+                    case '0':
+                        zoomImage(0);
+                        break;
+                }
+            }
+        }
+         
+        // 鼠标滚轮缩放处理
+        function handleWheel(e) {
+            if (imageViewer.style.display === 'flex') {
+                e.preventDefault();
+                if (e.deltaY < 0) {
+                    // 滚轮向上 - 放大
+                    zoomImage(1.1);
+                } else {
+                    // 滚轮向下 - 缩小
+                    zoomImage(0.9);
+                }
+            }
+        }
+         
+        // 初始化
+        window.addEventListener('DOMContentLoaded', initPlayer);
+    </script>
+</body>
+</html>

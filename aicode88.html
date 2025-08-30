@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>135模板提取助手</title>
+    <style>
+        #container {
+            width: 950px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        input, button {
+            font-family: '宋体';
+            font-size: 16px;
+            margin: 5px;
+        }
+        #preview {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            text-align: left;
+            max-width: 650px;
+            width: 100%;
+            max-height: 950px;
+            overflow-y: auto;
+            margin: 20px auto;
+            box-sizing: border-box;
+        }
+        #templateContent {
+            width: 100%;
+            max-width: 850px;
+            box-sizing: border-box;
+        }
+        #copyButton {
+            margin-left: 10px;
+            display: none;
+        }
+        #copyTip {
+            margin-top: 10px;
+            font-family: '宋体';
+            font-size: 14px;
+            color: #333;
+        }
+        textarea#hiddenTextArea {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h2>135编辑器模板提取助手</h2>
+        <label for="templateId">输入模板ID</label>
+        <input type="text" id="templateId" value="">
+        <button>提取模板</button>
+        <button id="copyButton">复制到剪贴板</button>
+        <div id="copyTip">提取成功后下方会显示模板预览，确认后请手动复制内容到剪贴板</div>
+        <div id="copyTip">复制后打开135编辑器然后点击导入旁边的HTML，粘贴到编辑区内再点一次HTML即可</div>
+        <div id="preview" style="display: none;">
+            <div id="templateContent"></div>
+        </div>
+    </div>
+    <textarea id="hiddenTextArea"></textarea>
+    <script>
+        async function extractTemplate() {
+            const templateId = document.getElementById('templateId').value.trim();
+            if (!templateId) {
+                alert('请输入模板ID');
+                return;
+            }
+            try {
+                const response = await fetch(`135.php?id=${templateId}`);
+                const data = await response.text();
+                if (data) {
+                    document.getElementById('templateContent').innerHTML = data;
+                    document.getElementById('preview').style.display = 'block';
+                    document.getElementById('copyButton').style.display = 'inline-block';
+                } else {
+                    alert('模板ID错误~无法获取数据~~');
+                    document.getElementById('preview').style.display = 'none';
+                    document.getElementById('copyButton').style.display = 'none';
+                }
+            } catch (err) {
+                console.error('请求失败:', err);
+                alert('请求失败，请检查网络连接');
+                document.getElementById('preview').style.display = 'none';
+                document.getElementById('copyButton').style.display = 'none';
+            }
+        }
+ 
+        function copyToClipboard() {
+            const templateContent = document.getElementById('templateContent').innerHTML;
+            const hiddenTextArea = document.getElementById('hiddenTextArea');
+            hiddenTextArea.value = templateContent;
+            hiddenTextArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert('已复制到你的粘贴板，直接粘贴即可~');
+                } else {
+                    alert('复制到剪贴板失败，请手动复制');
+                }
+            } catch (err) {
+                console.error('复制到剪贴板失败:', err);
+                alert('复制到剪贴板失败，请手动复制');
+            }
+        }
+    </script>
+</body>
+</html>
